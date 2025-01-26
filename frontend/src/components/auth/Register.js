@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Register = () => {
+const Register = ({ showToast }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     password2: ''
@@ -14,20 +16,27 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.password2) {
-      console.error('Passwords do not match');
+      showToast('Passwords do not match', 'error');
       return;
     }
 
     try {
       const res = await axios.post('/api/users/register', {
-        name: formData.name,
+        username: formData.username,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
         password: formData.password
       });
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
+
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('userId', res.data.user.id);
+        showToast('Registration successful!', 'success');
+        navigate('/dashboard');
+      }
     } catch (err) {
-      console.error(err.response.data);
+      showToast(err.response?.data?.msg || 'Registration failed', 'error');
     }
   };
 
@@ -38,13 +47,34 @@ const Register = () => {
   return (
     <div className="register-container">
       <h2>Register for EduConnect</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="register-form">
+        <h3>Create Account</h3>
         <div className="form-group">
           <input
             type="text"
-            placeholder="Name"
-            name="name"
-            value={formData.name}
+            placeholder="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="First Name"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Last Name"
+            name="lastName"
+            value={formData.lastName}
             onChange={handleChange}
             required
           />

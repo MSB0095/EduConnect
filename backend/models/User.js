@@ -1,7 +1,17 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
     type: String,
     required: true
   },
@@ -21,6 +31,10 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+});
+
+UserSchema.virtual('fullName').get(function() {
+  return `${this.firstName} ${this.lastName}`;
 });
 
 module.exports = mongoose.model('User', UserSchema);
