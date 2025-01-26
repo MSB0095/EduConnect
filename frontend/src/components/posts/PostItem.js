@@ -26,7 +26,7 @@ const PostItem = ({ post, onDelete, showToast }) => {
       await axios.delete(`/api/posts/${post._id}`, {
         headers: { 'x-auth-token': token }
       });
-      onDelete(post._id);
+      onDelete(post._id); // Call the parent's delete handler first
       showToast('Post deleted successfully', 'success');
     } catch (err) {
       showToast(err.response?.data?.msg || 'Error deleting post', 'error');

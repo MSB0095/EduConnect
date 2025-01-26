@@ -37,14 +37,7 @@ const Posts = ({ showToast }) => {
   };
 
   const handleDelete = async (postId) => {
-    try {
-      await axios.delete(`/api/posts/${postId}`, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
-      setPosts(posts.filter(post => post._id !== postId));
-    } catch (err) {
-      console.error(err.response.data);
-    }
+    setPosts(posts.filter(post => post._id !== postId));
   };
 
   return (
