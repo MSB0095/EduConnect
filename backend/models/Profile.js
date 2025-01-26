@@ -25,6 +25,25 @@ const ProfileSchema = new mongoose.Schema({
     twitter: String,
     linkedin: String
   },
+  country: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String
+  },
+  yearOfStudy: {
+    type: String
+  },
+  major: {
+    type: String
+  },
+  languages: [{
+    type: String
+  }],
+  skills: [{
+    type: String
+  }],
   date: {
     type: Date,
     default: Date.now

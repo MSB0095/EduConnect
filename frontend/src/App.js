@@ -29,7 +29,7 @@ function App() {
             path="/dashboard" 
             element={
               <PrivateRoute>
-                <Dashboard />
+                <Dashboard showToast={showToast} />
               </PrivateRoute>
             } 
           />
