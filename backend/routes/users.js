@@ -3,6 +3,34 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: 'uploads/profile',
+  filename: function(req, file, cb) {
+    cb(null, 'PROFILE-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: function(req, file, cb) {
+    checkFileType(file, cb);
+  }
+}).single('avatar');
+
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
 
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
@@ -43,6 +71,26 @@ router.post('/register', async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+});
+
+router.post('/upload-avatar', auth, (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ msg: err });
+    }
+    if (!req.file) {
+      return res.status(400).json({ msg: 'No file uploaded' });
+    }
+    try {
+      const user = await User.findById(req.user.id);
+      user.avatar = `/uploads/profile/${req.file.filename}`;
+      await user.save();
+      res.json(user);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  });
 });
 
 module.exports = router;

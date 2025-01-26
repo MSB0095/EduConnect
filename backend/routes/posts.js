@@ -34,6 +34,23 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// Search posts
+router.get('/search', auth, async (req, res) => {
+  try {
+    const searchQuery = req.query.q;
+    const posts = await Post.find({
+      $or: [
+        { text: { $regex: searchQuery, $options: 'i' } },
+        { name: { $regex: searchQuery, $options: 'i' } }
+      ]
+    }).sort({ date: -1 });
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // Like a post
 router.put('/like/:id', auth, async (req, res) => {
   try {
@@ -55,6 +72,24 @@ router.put('/like/:id', auth, async (req, res) => {
   }
 });
 
+// Delete post
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+    await post.remove();
+    res.json({ msg: 'Post removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // Add comment
 router.post('/comment/:id', auth, async (req, res) => {
   try {
@@ -69,6 +104,29 @@ router.post('/comment/:id', auth, async (req, res) => {
     };
 
     post.comments.unshift(newComment);
+    await post.save();
+    res.json(post.comments);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Delete comment
+router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = post.comments.find(comment => comment.id === req.params.comment_id);
+    if (!comment) {
+      return res.status(404).json({ msg: 'Comment not found' });
+    }
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+    
+    post.comments = post.comments.filter(
+      comment => comment.id !== req.params.comment_id
+    );
     await post.save();
     res.json(post.comments);
   } catch (err) {
