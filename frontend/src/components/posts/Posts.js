@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostItem from './PostItem';
+import SearchPosts from './SearchPosts';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -49,6 +50,7 @@ const Posts = () => {
   return (
     <div className="posts-container">
       <h2>Posts</h2>
+      <SearchPosts setPosts={setPosts} />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <textarea
