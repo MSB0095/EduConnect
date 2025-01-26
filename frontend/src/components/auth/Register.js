@@ -29,17 +29,7 @@ const Register = ({ showToast }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Debug logging
-    console.log('Form data before submission:', formData);
-
-    // Validate all fields
-    if (!formData.username || !formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      showToast('All fields are required', 'error');
-      return;
-    }
-
-    if (formData.password !== formData.password2) {
-      showToast('Passwords do not match', 'error');
+    if (!validateForm()) {
       return;
     }
 

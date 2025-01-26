@@ -22,7 +22,6 @@ const Comments = ({ postId, comments: initialComments, showToast }) => {
 
   return (
     <div className="comments-section">
-      <h4>Comments</h4>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <textarea
@@ -39,7 +38,7 @@ const Comments = ({ postId, comments: initialComments, showToast }) => {
           <div key={comment._id} className="comment">
             <div className="comment-header">
               <img src={comment.avatar || '/default-avatar.png'} alt="User" className="avatar-small" />
-              <span>{comment.name}</span>
+              <span>@{comment.username}</span>
             </div>
             <p>{comment.text}</p>
           </div>

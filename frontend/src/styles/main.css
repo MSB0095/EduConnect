@@ -373,3 +373,120 @@
   background: #ffc107;
   color: #000;
 }
+
+.post-image {
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.post-image img {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.image-preview {
+  margin: 1rem 0;
+  position: relative;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+}
+
+.image-input {
+  display: none;
+}
+
+.post-form {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.btn-like {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-like:hover {
+  transform: scale(1.1);
+}
+
+.heart-icon {
+  color: #aaa;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.heart-icon.liked {
+  color: #e31b23;
+  transform: scale(1.1);
+  animation: heartPop 0.3s ease;
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1.1); }
+}
+
+.btn-image-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f0f2f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-image-upload:hover {
+  background: #e4e6e9;
+}
+
+.btn-image-upload i {
+  font-size: 1.2rem;
+  color: #1a73e8;
+}
+
+.post-form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.image-upload-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.image-upload-preview {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.image-upload-wrapper:hover .image-upload-preview {
+  display: block;
+}

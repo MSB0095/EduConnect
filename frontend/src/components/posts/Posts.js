@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostItem from './PostItem';
+import PostForm from './PostForm';
 import SearchPosts from './SearchPosts';
 
 const Posts = ({ showToast }) => {
@@ -40,23 +41,15 @@ const Posts = ({ showToast }) => {
     setPosts(posts.filter(post => post._id !== postId));
   };
 
+  const handleNewPost = (newPost) => {
+    setPosts([newPost, ...posts]);
+  };
+
   return (
     <div className="posts-container">
       <h2>Posts</h2>
       <SearchPosts setPosts={setPosts} />
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <textarea
-            value={newPost}
-            onChange={(e) => setNewPost(e.target.value)}
-            placeholder="What's on your mind?"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Post
-        </button>
-      </form>
+      <PostForm onPostCreated={handleNewPost} showToast={showToast} />
       <div className="posts-list">
         {posts.map(post => (
           <PostItem 
