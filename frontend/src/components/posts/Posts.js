@@ -3,7 +3,7 @@ import axios from 'axios';
 import PostItem from './PostItem';
 import SearchPosts from './SearchPosts';
 
-const Posts = () => {
+const Posts = ({ showToast }) => {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
 
@@ -70,6 +70,7 @@ const Posts = () => {
             key={post._id} 
             post={post} 
             onDelete={handleDelete}
+            showToast={showToast}
           />
         ))}
       </div>

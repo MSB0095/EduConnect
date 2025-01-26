@@ -15,14 +15,15 @@ const Dashboard = () => {
         setProfile(res.data);
         setLoading(false);
       } catch (err) {
-        console.error(err.response.data);
+        console.error(err.response?.data);
+        setProfile(null);
         setLoading(false);
       }
     };
     fetchProfile();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
 
   return (
     <div className="dashboard-container">

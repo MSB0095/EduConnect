@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Comments from './Comments';
 
-const PostItem = ({ post, onDelete }) => {
+const PostItem = ({ post, onDelete, showToast }) => {
   const [likes, setLikes] = useState(post.likes.length);
   const token = localStorage.getItem('token');
   const [showComments, setShowComments] = useState(false);
@@ -43,6 +44,7 @@ const PostItem = ({ post, onDelete }) => {
           postId={post._id} 
           comments={comments} 
           setComments={setComments} 
+          showToast={showToast}
         />
       )}
     </div>

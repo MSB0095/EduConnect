@@ -37,7 +37,7 @@ function App() {
             path="/posts" 
             element={
               <PrivateRoute>
-                <Posts />
+                <Posts showToast={showToast} />
               </PrivateRoute>
             } 
           />
