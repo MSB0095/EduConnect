@@ -12,7 +12,16 @@ connectDB();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  if (req.method === 'POST') {
+    console.log('Request body:', req.body);
+  }
+  next();
+});
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../frontend/build')));

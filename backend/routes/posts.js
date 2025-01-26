@@ -10,7 +10,7 @@ router.post('/', auth, async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     const newPost = new Post({
       text: req.body.text,
-      name: user.name,
+      name: `${user.firstName} ${user.lastName}`,
       avatar: user.avatar,
       user: req.user.id
     });
@@ -79,11 +79,37 @@ router.delete('/:id', auth, async (req, res) => {
     if (!post) {
       return res.status(404).json({ msg: 'Post not found' });
     }
+    
+    // Check user
     if (post.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
-    await post.remove();
+
+    await Post.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Post removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Update post
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+
+    // Check user
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    post.text = req.body.text;
+    await post.save();
+
+    res.json(post);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

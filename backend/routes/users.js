@@ -34,25 +34,55 @@ function checkFileType(file, cb) {
 }
 
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  // Debug logging
+  console.log('Registration request received:', {
+    body: req.body,
+    contentType: req.headers['content-type']
+  });
 
   try {
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
+    const { username, firstName, lastName, email, password } = req.body;
+
+    // Validate input
+    const requiredFields = { username, firstName, lastName, email, password };
+    const missingFields = Object.keys(requiredFields).filter(key => !requiredFields[key]);
+    
+    if (missingFields.length > 0) {
+      console.log('Missing fields:', missingFields);
+      return res.status(400).json({
+        msg: 'Missing required fields',
+        missingFields
+      });
     }
 
-    user = new User({
-      name,
+    // Check for existing user
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        msg: `User already exists with this ${existingUser.email === email ? 'email' : 'username'}`
+      });
+    }
+
+    // Create new user
+    const user = new User({
+      username,
+      firstName,
+      lastName,
       email,
       password
     });
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
+    // Save user
     await user.save();
 
+    // Create token
     const payload = {
       user: {
         id: user.id
@@ -65,12 +95,28 @@ router.post('/register', async (req, res) => {
       { expiresIn: '24h' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({
+          token,
+          user: {
+            id: user.id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+          }
+        });
       }
     );
+
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('Registration error:', err);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({
+        msg: 'Validation Error',
+        errors: Object.values(err.errors).map(e => e.message)
+      });
+    }
+    res.status(500).json({ msg: 'Server Error', error: err.message });
   }
 });
 
