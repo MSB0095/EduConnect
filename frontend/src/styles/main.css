@@ -483,13 +483,16 @@ body {
 }
 
 .heart-icon {
-  color: var(--text-secondary);
+  color: #e31b23;
   transition: all 0.3s ease;
   font-size: 1.2rem;
 }
 
+.heart-icon.not-liked {
+  color: #aaa;
+}
+
 .heart-icon.liked {
-  color: var(--error);
   transform: scale(1.2);
   animation: heartPop 0.3s ease;
 }

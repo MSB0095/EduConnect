@@ -14,6 +14,8 @@ const Login = () => {
     try {
       const res = await axios.post('/api/auth/login', formData);
       localStorage.setItem('token', res.data.token);
+      // Trigger storage event for Navbar update
+      window.dispatchEvent(new Event('storage'));
       navigate('/dashboard');
     } catch (err) {
       console.error(err.response.data);

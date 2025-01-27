@@ -151,7 +151,7 @@ const PostItem = ({ post, onDelete, showToast }) => {
           className="btn-like"
           title={isLiked ? "Unlike" : "Like"}
         >
-          <i className={`fas fa-heart heart-icon ${isLiked ? 'liked' : ''}`}></i>
+          <i className={`fas fa-heart heart-icon ${!isLiked ? 'not-liked' : 'liked'}`}></i>
           <span>{likes}</span>
         </button>
         {post.user === localStorage.getItem('userId') && (
