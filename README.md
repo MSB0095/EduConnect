@@ -1,196 +1,210 @@
 # EduConnect
 
-A robust social learning platform that connects students, enabling knowledge sharing and collaborative learning.
+A student-focused social platform for knowledge sharing and connecting. Built with MERN stack.
 
-![EduConnect Logo](./frontend/public/logo.png)
+## Features
 
-## Overview
-
-EduConnect is a MERN stack application designed to create an educational social network where students can connect, share knowledge, and grow together. The platform facilitates meaningful discussions, resource sharing, and community building among students.
-
-## Key Features
-
-### User Management
-- Secure authentication using JWT
-- User registration and login
-- Profile customization
-- Avatar upload support
-- Educational background details
-
-### Social Interaction
-- Create and share posts
+### Core Functionality
+- User registration and authentication
+- Create, edit, and delete posts
 - Like and comment on posts
-- Search functionality
-- Real-time notifications
-- Educational discussion threads
+- Profile management with customizable fields
+- Image upload for posts and profiles
 
-### Profile Features
-- Institution details
-- Academic status
-- Field of study
-- Educational history
-- Professional interests
-- Social media integration
+### User Profiles Include
+- Academic information (Institution, Major, Year)
+- Skills and Interests
+- Languages
+- Location
+- Profile picture
 
-## Technology Stack
+### Posts Support
+- Text content
+- Image attachments
+- Likes/Unlike functionality
+- Comments
+- Edit/Delete options
 
-### Backend
-- **Node.js & Express.js**: Server framework
-- **MongoDB**: Database
-- **Mongoose**: ODM for MongoDB
-- **JWT**: Authentication
-- **bcrypt.js**: Password hashing
+## Tech Stack
+- MongoDB (Database)
+- Express.js (Backend)
+- React.js (Frontend)
+- Node.js (Runtime)
 
-### Frontend
-- **React**: UI library
-- **React Router**: Navigation
-- **Axios**: HTTP client
-- **CSS3**: Custom styling
+## Quick Start
 
-## Getting Started
-
-### Prerequisites
+1. Clone and Install
 ```bash
-node >= 14.0.0
-npm >= 6.0.0
-MongoDB >= 4.0.0
-```
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone https://github.com/yourusername/educonnect.git
+git clone https://github.com/MSB0095/educonnect.git
 cd educonnect
-```
-
-2. Install dependencies
-```bash
-# Install server dependencies
 npm install
-
-# Install client dependencies
-cd frontend
-npm install
+cd frontend && npm install
+cd ..
 ```
 
-3. Configure environment variables
-Create a `.env` file in the root directory:
+2. Configure Environment
+Create `.env` file:
 ```
+MONGO_URI=mongodb://127.0.0.1:27017/educonnect
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=your_secret_key
 ```
 
-4. Run the application
+3. Run Application
 ```bash
-# Run backend only (port 5000)
+# Run full stack
+npm run dev
+
+# Run backend only
 npm run server
 
-# Run frontend only (port 3000)
+# Run frontend only
 npm run client
+```
 
-# Run both frontend and backend
+Server runs on http://localhost:5000
+Client runs on http://localhost:3000
+
+## Detailed Setup Guide (Ubuntu)
+
+### 1. Install Node.js
+```bash
+# Add NodeSource repository
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+
+# Install Node.js
+sudo apt-get install -y nodejs
+
+# Verify installation
+node --version
+npm --version
+```
+
+### 2. Install MongoDB
+```bash
+# Import MongoDB public key
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+
+# Add MongoDB repository
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+# Update package list
+sudo apt-get update
+
+# Install MongoDB
+sudo apt-get install -y mongodb-org
+
+# Start MongoDB
+sudo systemctl start mongod
+
+# Enable MongoDB on system startup
+sudo systemctl enable mongod
+
+# Verify MongoDB is running
+sudo systemctl status mongod
+```
+
+### 3. Create MongoDB Database
+```bash
+# Start MongoDB shell
+mongosh
+
+# Create and use educonnect database
+use educonnect
+
+# Create initial collections
+db.createCollection('users')
+db.createCollection('posts')
+db.createCollection('profiles')
+
+# Exit MongoDB shell
+exit
+```
+
+### 4. Generate JWT Secret
+```bash
+# Generate a secure random string
+openssl rand -base64 64
+
+# Or using Node.js
+node -e "console.log(require('crypto').randomBytes(64).toString('base64'));"
+```
+
+### 5. Setup Environment Variables
+Create `.env` file in project root:
+```bash
+# Create and open .env file
+nano .env
+```
+
+Add the following content (replace JWT_SECRET with your generated string):
+```
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/educonnect
+JWT_SECRET=your_generated_secret_here
+```
+
+### 6. Create Upload Directories
+```bash
+# Create directories for uploads
+mkdir -p uploads/profile uploads/posts
+```
+
+### 7. Install Project Dependencies
+```bash
+# Install backend dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
+```
+
+### 8. Run the Application
+```bash
+# Development mode (runs both frontend & backend)
 npm run dev
 ```
 
-## API Documentation
+### Common Issues
 
-### Authentication Endpoints
-```
-POST /api/auth/login
-POST /api/users/register
-GET  /api/auth/me
-```
-
-### Posts Endpoints
-```
-GET    /api/posts
-POST   /api/posts
-PUT    /api/posts/like/:id
-POST   /api/posts/comment/:id
-DELETE /api/posts/:id
-GET    /api/posts/search
-```
-
-### Profile Endpoints
-```
-GET  /api/profile/me
-POST /api/profile
-GET  /api/profile/user/:user_id
-```
-
-## Project Structure
-```
-educonnect/
-├── backend/
-│   ├── config/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   └── server.js
-├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── styles/
-│       └── App.js
-├── package.json
-└── README.md
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Code Style
-
-- Follow ESLint configuration
-- Use meaningful variable names
-- Write concise comments
-- Maintain consistent spacing
-
-## Testing
-
+1. MongoDB Connection Issues
 ```bash
-# Run backend tests
-npm run test
+# Check MongoDB status
+sudo systemctl status mongod
 
-# Run frontend tests
-cd frontend
-npm test
+# Restart MongoDB
+sudo systemctl restart mongod
+
+# Check MongoDB logs
+sudo tail -f /var/log/mongodb/mongod.log
 ```
 
-## Deployment
+2. Port Already in Use
+```bash
+# Find process using port 5000
+sudo lsof -i :5000
 
-The application can be deployed using:
-- Heroku
-- DigitalOcean
-- AWS
-- Any other cloud platform supporting Node.js
+# Kill the process
+sudo kill -9 <PID>
+```
+
+3. Permission Issues
+```bash
+# Set proper permissions for upload directories
+sudo chmod 755 uploads
+sudo chown -R $USER:$USER uploads
+```
+
+Now your development environment is fully set up and ready to go!
+
+## Author
+
+Mohamed Salah Belbsir
+- Software Engineering Student at ALX
+- GitHub: [@MSB0095](https://github.com/MSB0095)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Authors
-
-- **Your Name** - *Initial work* - [YourGithub](https://github.com/yourusername)
-
-## Acknowledgments
-
-- ALX Software Engineering Program
-- MongoDB Documentation
-- React Documentation
-- Express.js Community
-
-## Support
-
-For support, email support@educonnect.com or join our Discord channel.
-
----
-Made with ❤️ by [Your Name]
+MIT License - see [LICENSE](LICENSE)

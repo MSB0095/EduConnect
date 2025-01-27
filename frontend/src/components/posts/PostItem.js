@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Comments from './Comments';
+import { Link } from 'react-router-dom';
 
 const PostItem = ({ post, onDelete, showToast }) => {
   const [likes, setLikes] = useState(post.likes.length);
@@ -83,9 +84,13 @@ const PostItem = ({ post, onDelete, showToast }) => {
   return (
     <div className="post">
       <div className="post-header">
-        <img src={post.avatar || '/default-avatar.png'} alt="User" className="avatar" />
+        <Link to={`/profile/${post.username}`} className="avatar-link">
+          <img src={post.avatar || '/default-avatar.png'} alt="User" className="avatar" />
+        </Link>
         <div>
-          <h4>@{post.username}</h4>  {/* Changed from post.name */}
+          <Link to={`/profile/${post.username}`} className="username-link">
+            <h4>@{post.username}</h4>
+          </Link>
           <small>{new Date(post.date).toLocaleDateString()}</small>
         </div>
       </div>
